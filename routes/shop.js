@@ -10,9 +10,11 @@ router.get('/', shopController.getIndex);
 
 router.get('/products', shopController.getProducts);
 
-router.get('/products/:productId', shopController.getProductCart)// dynamic Product id
+router.get('/products/:productId', shopController.getProduct);// dynamic Product id
 
 router.get('/cart', shopController.getCart);
+ 
+router.post('/cart', shopController.postCart);///for add to cart
 
 router.get('/orders', shopController.getOrders);
 
