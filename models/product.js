@@ -96,14 +96,14 @@ module.exports = class Product {
         res = JSON.parse(fileContent)
       }
 
-      let product = res.find((prod) => prod.id === id)
+      // let product = res.find((prod) => prod.id === id)
       let updatedProduct = res.filter((prod) => prod.id !== id);
 
       fs.writeFile(p, JSON.stringify(updatedProduct), err => {
         console.log(err);
-        if(!err){
-          Cart.deleteProduct(id, product.price)
-        }
+        // if(!err){
+        //   Cart.deleteProduct(id, product.price)
+        // }
       });
       
 
