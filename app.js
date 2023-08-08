@@ -8,11 +8,11 @@ const errorController = require('./controllers/error');
 
 const app = express();
 
-db.execute('SELECT * FROM products')
-.then(result =>{
-    console.log(result[0])
-})
-.catch(err => console.log(err))// Database
+// db.execute('SELECT * FROM products')
+// .then(result =>{
+//     console.log(result[0])
+// })
+// .catch(err => console.log(err))// Database
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');

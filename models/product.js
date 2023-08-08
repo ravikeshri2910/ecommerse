@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const db = require('../util/database')
+
 const Cart = require('./cart')
 
 // const p = path.join(path.dirname(process.mainModule.filename),
@@ -30,84 +32,25 @@ module.exports = class Product {
   }
 
   save() {
-
+      return db.execute('INSERT INTO products (title, price, imageUrl, description) VALUES (?, ?, ?, ?)',[this.title, this.price, this.imageUrl, this.description] 
+      )
     
-    getProductsFromFile(products => {
-
-      if(this.id){
-        const existingProductIndex = products.findIndex((prod)=> prod.id ===this.id)
-
-        const updatedProducts = [...products];
-        updatedProducts[existingProductIndex] = this;
-
-        fs.writeFile(p, JSON.stringify(updatedProducts), err => {
-          console.log(err);
-        });
-      }
-
-      else{
-
-        this.id = Math.random().toString();
-        products.push(this);
-        fs.writeFile(p, JSON.stringify(products), err => {
-          console.log(err);
-        });
-      }
-    });
+    
   }
 
   static fetchAll(cb) {
-    getProductsFromFile(cb);
+    return db.execute('SELECT * FROM products')
   }
 
-  // static findById(id, cb) {
-  //   getProductsFromFile((products) => {
-  //     const product = products.find((p) => p.id === id);
-  //     console.log(product)
-  //     cb(product)
-  //   })
-  // }
 
-  static findById(id,cb){
+  static findById(id){
+    return db.execute('SELECT * FROM products WHERE products.id = ?', [id])
     
-    fs.readFile(p, (err, fileContent) => {
-           let res;
-           if (err) {
-              return([])
-           } else {
-             res = JSON.parse(fileContent)
-           }
-
-        const product = res.find((p) => p.id === id);
-        console.log("product" + product)
-        // return product
-          cb(product)
-        // Cart.addProduct(id, product.price)
-     });
  };
 
  static deleteById(id){
-       
-    fs.readFile(p, (err, fileContent) => {
-      let res;
-      if (err) {
-         return([])
-      } else {
-        res = JSON.parse(fileContent)
-      }
-
-      // let product = res.find((prod) => prod.id === id)
-      let updatedProduct = res.filter((prod) => prod.id !== id);
-
-      fs.writeFile(p, JSON.stringify(updatedProduct), err => {
-        console.log(err);
-        // if(!err){
-        //   Cart.deleteProduct(id, product.price)
-        // }
-      });
-      
-
-    });
+       return db.execute('DELETE FROM products WHERE products.id = ?',[id])
+   
 
  }
 
