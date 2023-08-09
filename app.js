@@ -29,9 +29,18 @@ app.use(shopRoutes);
 app.use(errorController.get404);
 
 
-sequelize.sync().then((res)=>{
-    // console.log(res)
+// sequelize.sync().then((res)=>{
+//     // console.log(res)
+//     app.listen(3000);
+// }).catch((err) => console.log(err))
+sequelize
+  .sync()
+  .then(result => {
+    // console.log(result);
     app.listen(3000);
-}).catch((err) => console.log(err))
+  })
+  .catch(err => {
+    console.log(err);
+  });
 
 // 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
