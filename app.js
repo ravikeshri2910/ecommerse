@@ -4,6 +4,9 @@ const sequelize = require('./util/database')
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const Product = require('./models/product');
+const User = require('./models/user')
+
 const errorController = require('./controllers/error');
 
 const app = express();
@@ -23,22 +26,43 @@ const shopRoutes = require('./routes/shop');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use((req,res,next)=>{
+  User.findByPk(1)
+  .then((user)=>{
+    req.user = user
+    next()
+    console.log('tuser'+ user)
+  })
+  .catch(err => console.log(err))
+})
+
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 
 app.use(errorController.get404);
 
+Product.belongsTo(User,{constraints : true , onDelete : 'CASCADE'});
+User.hasMany(Product)
 
-// sequelize.sync().then((res)=>{
-//     // console.log(res)
-//     app.listen(3000);
-// }).catch((err) => console.log(err))
+
+
 sequelize
+  // .sync({force : true})// it overwite the tables 
   .sync()
   .then(result => {
     // console.log(result);
+    return User.findByPk(1);
+  }).then((user)=>{
+    if(!user){
+      return User.create({name : 'Max',email : 'test@test.com'})
+    }else{
+      return User
+    }
+  }).then(User =>{
+    console.log(User)
     app.listen(3000);
   })
+  
   .catch(err => {
     console.log(err);
   });
